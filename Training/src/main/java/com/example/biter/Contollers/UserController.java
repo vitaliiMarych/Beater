@@ -10,10 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -52,6 +49,7 @@ public class UserController {
 
     @PostMapping("saveUser")
     public String saveUser(
+            Model model,
             @AuthenticationPrincipal User user,
             @RequestParam String username,
             @RequestParam Map<String, String> form,
@@ -59,17 +57,21 @@ public class UserController {
     ){
         User findedUser = userRepo.findById(userId);
 
-
         findedUser.setUsername(username);
 
-        findedUser.getRoles().clear();
-        findedUser.getRoles().add(Role.USER);
+        Set<String> newRoles = new HashSet<>();
 
         Set<String> roles = Arrays.stream(Role.values()).map(Role::name).collect(Collectors.toSet());
 
         for (String role : form.keySet()){
             if (roles.contains(role) && !role.equals(Role.USER.name()))
-                findedUser.getRoles().add(Role.valueOf(role));
+                newRoles.add(role);
+        }
+
+        findedUser.getRoles().clear();
+        findedUser.getRoles().add(Role.USER);
+        for (String role : newRoles){
+            findedUser.getRoles().add(Role.valueOf(role));
         }
 
         userRepo.save(findedUser);

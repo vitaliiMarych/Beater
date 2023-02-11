@@ -18,4 +18,6 @@
         <button type="submit">Зберегти</button>
     </form>
 
+    <a style = "color:red">${message?if_exists}</a>
+
 </@c.page>

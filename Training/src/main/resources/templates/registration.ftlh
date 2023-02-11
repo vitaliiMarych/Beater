@@ -2,9 +2,9 @@
 <#import "parts/common.ftlh" as c>
 
 <@c.page>
-    <div>Registration</div>
+    <h4><b>Registration</b></h4>
 
-    <@l.login "/registration"/>
+    <@l.login "/registration" true/>
     <br>
     <a style = "color:red">${message?if_exists}</a>
 
