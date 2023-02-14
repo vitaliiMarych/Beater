@@ -16,6 +16,15 @@
             </div>
         </div>
 
+        <#if isRegisterForm>
+            <div class="row">
+                <div class="form-group col-lg-4">
+                    <label class="col-form-label"> Email:</label>
+                    <input type="email" class="form-control" name="email" placeholder="some@some.com"/>
+                </div>
+            </div>
+        </#if>
+
         <input type = "hidden" name = "_csrf" value="${_csrf.token}">
 
         <div class="row col-lg-6">
@@ -32,9 +41,10 @@
                 </div>
             </#if>
         </div>
-
-
     </form>
+    <br>
+    <p <#if isRegisterForm> style = "color:red"</#if>>
+        ${message?if_exists}</p>
 </#macro>
 
 <#macro logout>

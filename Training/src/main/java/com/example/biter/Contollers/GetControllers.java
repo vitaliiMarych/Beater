@@ -1,7 +1,7 @@
 package com.example.biter.Contollers;
 
 import com.example.biter.Domain.Message;
-import com.example.biter.repos.MessageRepo;
+import com.example.biter.Repos.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.example.biter.repos;
+package com.example.biter.Repos;
 
 import com.example.biter.Domain.Message;
 import org.springframework.data.repository.CrudRepository;

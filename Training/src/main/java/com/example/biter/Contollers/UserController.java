@@ -2,7 +2,7 @@ package com.example.biter.Contollers;
 
 import com.example.biter.Domain.Role;
 import com.example.biter.Domain.User;
-import com.example.biter.repos.UserRepo;
+import com.example.biter.Repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
