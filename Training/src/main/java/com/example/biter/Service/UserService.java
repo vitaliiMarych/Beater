@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -28,10 +28,14 @@ public class UserService implements UserDetailsService {
 
     public int addUser(User user){
         User foundUser = userRepo.findByUsername(user.getUsername());
+        User foundEmail = userRepo.findByEmail(user.getEmail());
 
         if (foundUser != null){
             return InputInfoMessages.getExistUserCode();
         }
+
+        if (foundEmail != null)
+            return InputInfoMessages.getExistEmail();
 
         if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
             return InputInfoMessages.getBadInputCode();
@@ -43,16 +47,20 @@ public class UserService implements UserDetailsService {
 
         userRepo.save(user);
 
+        sendMessage(user);
+
+        return InputInfoMessages.getGoodInputCode();
+    }
+
+    private void sendMessage(User user){
         if (!user.getEmail().isEmpty()){
             String message = String.format("Привіт, %s!\n" +
-                    "Ласкаво просимо на Beater. Щоб активувати пошту перейдіть по посиланню: http://localhost:8080/activate/%s",
+                            "Ласкаво просимо на Beater. Щоб активувати пошту перейдіть по посиланню: http://localhost:8080/activate/%s",
                     user.getUsername(),
                     user.getActivationCode());
 
             mailSenderService.send(user.getEmail(), "Код активації пошти", message);
         }
-
-        return InputInfoMessages.getGoodInputCode();
     }
 
     public boolean activateUser(String code) {
@@ -65,5 +73,61 @@ public class UserService implements UserDetailsService {
         userRepo.save(user);
 
         return true;
+    }
+
+    public List<User> findAll() {
+        return userRepo.findAll();
+    }
+
+    public User findById(Long user) {
+        return userRepo.findById(user).orElse(null);
+    }
+
+
+    public void saveUser(Long userId, String username, Map<String, String> form) {
+        User findedUser = findById(userId);
+
+        findedUser.setUsername(username);
+
+        Set<String> newRoles = new HashSet<>();
+
+        Set<String> roles = Arrays.stream(Role.values()).map(Role::name).collect(Collectors.toSet());
+
+        for (String role : form.keySet()){
+            if (roles.contains(role) && !role.equals(Role.USER.name()))
+                newRoles.add(role);
+        }
+
+        findedUser.getRoles().clear();
+        findedUser.getRoles().add(Role.USER);
+        for (String role : newRoles){
+            findedUser.getRoles().add(Role.valueOf(role));
+        }
+
+        userRepo.save(findedUser);
+    }
+
+    public void saveProfile(User user, String password, String email) {
+        String userEmail = user.getEmail();
+
+        boolean isEmailChanged = (email != null && !email.equals(userEmail)) ||
+                (userEmail != null && userEmail.equals(email));
+
+        if (isEmailChanged){
+            user.setEmail(email);
+
+            if (!email.isEmpty()){
+                user.setActivationCode(UUID.randomUUID().toString());
+            }
+        }
+
+        if (!password.isEmpty()) {
+            user.setPassword(password);
+        }
+
+        userRepo.save(user);
+
+        if (isEmailChanged)
+            sendMessage(user);
     }
 }

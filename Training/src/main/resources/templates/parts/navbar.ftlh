@@ -1,4 +1,4 @@
-<#include "security.ftl">
+<#include "security.ftlh">
 <#import "login.ftlh" as l>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -18,6 +18,12 @@
             <#if isAdmin>
                 <li class="nav-item active">
                     <a class="nav-link" href="/user">Список користувачів</a>
+                </li>
+            </#if>
+
+            <#if isAuthorized>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/user/profile">Профіль</a>
                 </li>
             </#if>
         </ul>

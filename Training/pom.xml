@@ -59,6 +59,18 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <!--    FlyWay  db  -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <properties>

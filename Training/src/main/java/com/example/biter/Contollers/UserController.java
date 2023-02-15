@@ -2,7 +2,7 @@ package com.example.biter.Contollers;
 
 import com.example.biter.Domain.Role;
 import com.example.biter.Domain.User;
-import com.example.biter.Repos.UserRepo;
+import com.example.biter.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,30 +11,31 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
-@PreAuthorize("hasAnyAuthority('ADMIN', 'ADMINISTRATOR')")
 public class UserController {
     @Autowired
-    private UserRepo userRepo;
+    private UserService userService;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'ADMINISTRATOR')")
     @GetMapping
     public String userList(Model model){
-        model.addAttribute("users", userRepo.findAll());
+        model.addAttribute("users", userService.findAll());
 
         return "users";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'ADMINISTRATOR')")
     @GetMapping("{user}")
     public String userEditForm(
             @AuthenticationPrincipal User mainUser,
-            @PathVariable Integer user,
+            @PathVariable Long user,
             Model model
     ) {
 
-        User findedUser = userRepo.findById(user);
+
+        User findedUser = userService.findById(user);
 
         if (!Objects.equals(mainUser.getId(), findedUser.getId()))
             if (mainUser.getRoles().size() <= findedUser.getRoles().size())
@@ -47,34 +48,37 @@ public class UserController {
         return "userEdit";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'ADMINISTRATOR')")
     @PostMapping("saveUser")
     public String saveUser(
             Model model,
             @AuthenticationPrincipal User user,
             @RequestParam String username,
             @RequestParam Map<String, String> form,
-            @RequestParam Integer userId
+            @RequestParam Long userId
     ){
-        User findedUser = userRepo.findById(userId);
+        userService.saveUser(userId, username, form);
 
-        findedUser.setUsername(username);
 
-        Set<String> newRoles = new HashSet<>();
-
-        Set<String> roles = Arrays.stream(Role.values()).map(Role::name).collect(Collectors.toSet());
-
-        for (String role : form.keySet()){
-            if (roles.contains(role) && !role.equals(Role.USER.name()))
-                newRoles.add(role);
-        }
-
-        findedUser.getRoles().clear();
-        findedUser.getRoles().add(Role.USER);
-        for (String role : newRoles){
-            findedUser.getRoles().add(Role.valueOf(role));
-        }
-
-        userRepo.save(findedUser);
         return "redirect:/user";
+    }
+
+    @GetMapping("profile")
+    public String getProfile(Model model, @AuthenticationPrincipal User user){
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", user.getEmail());
+
+        return "profile";
+    }
+
+    @PostMapping("profile")
+    public String saveProfile(
+            @AuthenticationPrincipal User user,
+            @RequestParam String password,
+            @RequestParam String email
+    ){
+        userService.saveProfile(user, password, email);
+
+        return "redirect:/user/profile";
     }
 }

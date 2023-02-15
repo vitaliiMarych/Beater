@@ -13,5 +13,9 @@ upload.path = /D:/gitHub/Beater/Training/src/main/java/uploads
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 
 spring.mail.username= apiskin557@gmail.com
-spring.mail.password= *********
-
+spring.mail.password= **********
+spring.mail.host=smtp.gmail.com
+spring.mail.port=465
+spring.mail.protocol=smtps
+spring.mail.properties.mail.debug=true
+spring.mail.properties.mail.transport.protocol=smtps
