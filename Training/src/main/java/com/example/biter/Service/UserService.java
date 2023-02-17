@@ -2,12 +2,12 @@ package com.example.biter.Service;
 
 import com.example.biter.Domain.Role;
 import com.example.biter.Domain.User;
-import com.example.biter.InfoMessages.InputInfoMessages;
 import com.example.biter.Repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,35 +21,31 @@ public class UserService implements UserDetailsService {
     @Autowired
     private MailSenderService mailSenderService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByUsername(username);
     }
 
-    public int addUser(User user){
+    public boolean addUser(User user){
         User foundUser = userRepo.findByUsername(user.getUsername());
-        User foundEmail = userRepo.findByEmail(user.getEmail());
 
-        if (foundUser != null){
-            return InputInfoMessages.getExistUserCode();
-        }
-
-        if (foundEmail != null)
-            return InputInfoMessages.getExistEmail();
-
-        if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
-            return InputInfoMessages.getBadInputCode();
+        if (foundUser != null) {
+            return false;
         }
 
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepo.save(user);
 
         sendMessage(user);
 
-        return InputInfoMessages.getGoodInputCode();
+        return true;
     }
 
     private void sendMessage(User user){
@@ -122,7 +118,7 @@ public class UserService implements UserDetailsService {
         }
 
         if (!password.isEmpty()) {
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
         }
 
         userRepo.save(user);

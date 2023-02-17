@@ -1,7 +1,6 @@
 package com.example.biter.Contollers;
 
 import com.example.biter.Domain.User;
-import com.example.biter.InfoMessages.InputInfoMessages;
 import com.example.biter.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,9 +23,9 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(User user, Map<String, Object> model){
-        int code = userService.addUser(user);
-        if (code != InputInfoMessages.getGoodInputCode()){
-            model.put("message", InputInfoMessages.getInfo(code));
+        boolean isAdded = userService.addUser(user);
+        if (!isAdded){
+            model.put("message", "Користувач вже існує");
             return "registration";
         }
 
