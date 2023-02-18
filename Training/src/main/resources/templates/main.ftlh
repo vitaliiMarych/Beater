@@ -2,48 +2,62 @@
 
 <@c.page>
 
-    <div>Знайти повідомлення:</div>
+    <div>Find messages:</div>
     <div class="form-row">
         <div class="form-group col-md-6">
             <form method="get" action="/main" class="form-inline">
-                <input type = "text" name = "filter" value = "${filter?if_exists}" placeholder="Знайти за тегом">
-                <button type="submit" class="btn btn-primary ml-2">Пошук</button>
+                <input type = "text" name = "filter" value = "${filter?if_exists}" placeholder="Find by tag">
+                <button type="submit" class="btn btn-primary ml-2">Search</button>
             </form>
         </div>
     </div>
 
     <a class="btn btn-primary" data-toggle="collapse" href="#collapseAddMessage" role="button" aria-expanded="false" aria-controls="collapseExample">
-        Добавити повідомлення
+        Add message
     </a>
 
-    <div class="collapse" id="collapseAddMessage">
+    <div class="collapse <#if writtenMessage??>show</#if>" id="collapseAddMessage">
 
         <form method="post" action="add" enctype="multipart/form-data">
 
+                <input type = "text" name = "text" class="form-control <#if textError??>is-invalid</#if> mt-3"
+                       value="<#if writtenMessage??>${writtenMessage.text}</#if>"
+                       placeholder="Write a message">
 
-                <input type = "text" name = "text" class="form-control mt-3" placeholder="Введіть повідомлення">
+                <#if textError??>
+                    <div class="invalid-feedback">
+                        ${textError}
+                    </div>
+                </#if>
 
                 <div class = "form-row mt-3">
                     <div class="form-group col-md-3">
-                        <input type = "text" name = "tag" class="form-control" placeholder="Тег">
+                        <input type = "text" name = "tag" class="form-control <#if tagError??>is-invalid</#if>"
+                               value="<#if writtenMessage??>${writtenMessage.tag}</#if>"
+                               placeholder="Tag">
+                        <#if tagError??>
+                            <div class="invalid-feedback">
+                                ${tagError}
+                            </div>
+                        </#if>
                     </div>
                     <div class="form-group col-md-3">
                         <div class="custom-file">
                             <input type="file" name="file" class="form-control" id="customFile">
-                            <label class="custom-file-label" for="customFile">Вибрати файл</label>
+                            <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                     </div>
                 </div>
 
                 <input type = "hidden" name = "_csrf" value="${_csrf.token}">
-                <button type = "submit" class="btn btn-primary">Добавити</button>
+                <button type = "submit" class="btn btn-primary">Add</button>
 
 
         </form>
 
     </div>
 
-    <div>Список повідомлень:</div>
+    <div>List of messages:</div>
 
     <div class="card-columns">
     <#list messages as message>
@@ -63,8 +77,7 @@
         </div>
 
     <#else>
-        Повідомлень нема
-
+        Messages is not exist
     </#list>
     </div>
 

@@ -5,22 +5,51 @@
         <div class="row">
             <div class="form-group col-lg-4">
                 <label class="col-form-label"> User Name :</label>
-                <input type="text" class="form-control" name="username" placeholder="username"/>
+                <input type="text" class="form-control <#if usernameError??>is-invalid</#if>"
+                       value="<#if user??>${user.username}</#if>" name="username" placeholder="Username"/>
+                <#if usernameError??>
+                    <div class="invalid-feedback">
+                        ${usernameError}
+                    </div>
+                </#if>
             </div>
         </div>
 
         <div class="row">
             <div class="form-group col-lg-4">
                 <label class="col-form-label"> Password:</label>
-                <input type="password" class="form-control" name="password" placeholder="password"/>
+                <input type="password" class="form-control <#if passwordError??>is-invalid</#if>" name="password" placeholder="Password"/>
+                <#if passwordError??>
+                    <div class="invalid-feedback">
+                        ${passwordError}
+                    </div>
+                </#if>
             </div>
         </div>
 
         <#if isRegisterForm>
             <div class="row">
                 <div class="form-group col-lg-4">
+                    <label class="col-form-label"> Password:</label>
+                    <input type="password" class="form-control <#if password2Error??>is-invalid</#if>" name="password2" placeholder="Confirm password"/>
+                    <#if password2Error??>
+                        <div class="invalid-feedback">
+                            ${password2Error}
+                        </div>
+                    </#if>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-lg-4">
                     <label class="col-form-label"> Email:</label>
-                    <input type="email" class="form-control" name="email" placeholder="some@some.com"/>
+                    <input type="email" class="form-control <#if emailError??>is-invalid</#if>"
+                           value="<#if user??>${user.email}</#if>" name="email" placeholder="Some@some.com"/>
+                    <#if emailError??>
+                        <div class="invalid-feedback">
+                            ${emailError}
+                        </div>
+                    </#if>
                 </div>
             </div>
         </#if>
@@ -30,9 +59,9 @@
         <div class="row col-lg-6">
             <input type="submit" class="btn btn-primary" value="
             <#if isRegisterForm>
-                Створити
+                Create
             <#else>
-                Увійти
+                Sign in
             </#if>"/>
 
             <#if !isRegisterForm>
@@ -42,14 +71,11 @@
             </#if>
         </div>
     </form>
-    <br>
-    <p <#if isRegisterForm> style = "color:red"</#if>>
-        ${message?if_exists}</p>
 </#macro>
 
 <#macro logout>
     <form action="/logout" method="post">
         <input type = "hidden" name = "_csrf" value="${_csrf.token}">
-        <button class="btn btn-primary" type="submit">Вийти</button>
+        <button class="btn btn-primary" type="submit">Sign out</button>
     </form>
 </#macro>

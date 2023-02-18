@@ -1,14 +1,26 @@
 package com.example.biter.Domain;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+
+@Getter
+@Setter
 @Entity
 public class Message {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "Please fill the message")
+    @Length(max = 1024, message = "Message too long, length is more 1024 characters")
     private String text;
+
+    @NotBlank(message = "Please fill the tag")
+    @Length(max = 1024, message = "Tag too long, length is more 1024 characters")
     private String tag;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -34,43 +46,4 @@ public class Message {
         return author.getUsername();
     }
 
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
 }

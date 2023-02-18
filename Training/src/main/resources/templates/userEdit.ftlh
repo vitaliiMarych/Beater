@@ -1,7 +1,7 @@
 <#import "parts/common.ftlh" as c>
 
 <@c.page>
-    <h2>Редагувати користувача ${user.username}</h2>
+    <h2>Edit user ${user.username}</h2>
 
     <form method="post" action="saveUser">
         <input type="text" name = "username" value="${user.username}">
@@ -15,7 +15,7 @@
 
         <input type="hidden" value="${user.id}" name="userId">
         <input type = "hidden" name = "_csrf" value="${_csrf.token}">
-        <button type="submit">Зберегти</button>
+        <button type="submit">Save</button>
     </form>
 
     <a style = "color:red">${message?if_exists}</a>

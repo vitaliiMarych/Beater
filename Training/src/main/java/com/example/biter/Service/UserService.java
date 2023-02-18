@@ -26,7 +26,13 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username);
+        User user = userRepo.findByUsername(username);
+
+        if (user == null){
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return user;
     }
 
     public boolean addUser(User user){
@@ -50,12 +56,12 @@ public class UserService implements UserDetailsService {
 
     private void sendMessage(User user){
         if (!user.getEmail().isEmpty()){
-            String message = String.format("Привіт, %s!\n" +
-                            "Ласкаво просимо на Beater. Щоб активувати пошту перейдіть по посиланню: http://localhost:8080/activate/%s",
+            String message = String.format("Hello, %s!\n" +
+                            "Welcome to Beater. To activate mail, follow the link: http://localhost:8080/activate/%s",
                     user.getUsername(),
                     user.getActivationCode());
 
-            mailSenderService.send(user.getEmail(), "Код активації пошти", message);
+            mailSenderService.send(user.getEmail(), "Activation code", message);
         }
     }
 
