@@ -1,21 +1,34 @@
-spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/test_bd
+#database
+spring.datasource.url=jdbc:mysql://${MYSQL_HOST:localhost}:3306/test_db
 spring.datasource.username=root
-spring.datasource.password=*******
-spring.jpa.generate-ddl=true
+spring.datasource.password=********
+spring.jpa.generate-ddl=false
 
-server.servlet.encoding.charset=UTF-8
-server.servlet.encoding.force=true
-
-spring.freemarker.expose-request-attributes=true
-
-upload.path = /D:/gitHub/Beater/Training/src/main/java/uploads
+spring.jpa.show-sql=false
+spring.jpa.hibernate.ddl-auto=validate
+spring.flyway.enabled=false
 
 spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 
+#encode
+server.servlet.encoding.charset=UTF-8
+server.servlet.encoding.force=true
+
+#freemarker
+spring.freemarker.expose-request-attributes=true
+
+#upload path
+upload.path = /D:/gitHub/Beater/Training/src/main/java/uploads
+
+#email
 spring.mail.username= apiskin557@gmail.com
-spring.mail.password= **********
+spring.mail.password= ************
 spring.mail.host=smtp.gmail.com
 spring.mail.port=465
 spring.mail.protocol=smtps
 spring.mail.properties.mail.debug=true
 spring.mail.properties.mail.transport.protocol=smtps
+
+#sessions
+spring.session.jdbc.initialize-schema=always
+spring.session.jdbc.table-name=SPRING_SESSION

@@ -26,10 +26,6 @@ public class User implements UserDetails {
     @NotBlank(message = "Please fill the password")
     private String password;
 
-    @Transient
-    @NotBlank(message = "Please fill the password confirmation")
-    private String password2;
-
     private boolean active;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

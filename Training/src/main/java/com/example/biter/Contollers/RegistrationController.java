@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -24,14 +25,21 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(@Valid User user, BindingResult bindingResult, Model model){
+    public String addUser(@RequestParam("password2") String passwordConfirm, @Valid User user,
+                          BindingResult bindingResult, Model model){
 
-        if (user.getPassword() != null && !user.getPassword().equals(user.getPassword2())) {
+        boolean isConfirmEmpty = passwordConfirm.isEmpty();
+
+        if (isConfirmEmpty){
+            model.addAttribute("password2Error", "Please fill the password confirmation");
+        }
+
+        if (user.getPassword() != null && !user.getPassword().equals(passwordConfirm)) {
             model.addAttribute("passwordError", "Password are different");
             return "registration";
         }
 
-        if (bindingResult.hasErrors()){
+        if (isConfirmEmpty || bindingResult.hasErrors()){
             model.mergeAttributes(ControllerUtils.getErrors(bindingResult));
             return "registration";
         }
@@ -49,10 +57,14 @@ public class RegistrationController {
     public String activateCode(Model model, @PathVariable String code){
         boolean isActivated = userService.activateUser(code);
 
-        if (isActivated)
+        if (isActivated) {
             model.addAttribute("message", "Mail has been successfully activated");
-        else
+            model.addAttribute("messageType", "success");
+        }
+        else {
             model.addAttribute("message", "The activation code is not valid");
+            model.addAttribute("messageType", "danger");
+        }
 
         return "login";
     }
