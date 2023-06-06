@@ -2,6 +2,7 @@ package com.example.biter.Contollers;
 
 import com.example.biter.Domain.Role;
 import com.example.biter.Domain.User;
+import com.example.biter.Repos.UserRepo;
 import com.example.biter.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -78,4 +79,51 @@ public class UserController {
 
         return "redirect:/user/profile";
     }
+
+    @GetMapping("subscribe/{userId}")
+    public String subscribe(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable Long userId
+    ) {
+        User user = userService.findById(userId);
+
+        userService.subscribe(currentUser, user);
+
+        return "redirect:/user-messages/" + user.getId();
+    }
+
+    @GetMapping("unsubscribe/{userId}")
+    public String unsubscribe(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable Long userId
+    ) {
+        User user = userService.findById(userId);
+
+        userService.unsubscribe(currentUser, user);
+
+        return "redirect:/user-messages/" + user.getId();
+    }
+
+    @GetMapping("{type}/{user}/list")
+    public String userList(
+            Model model,
+            @PathVariable String type,
+            @PathVariable Long user
+
+    ) {
+        User findedUser = userService.findById(user);
+
+        model.addAttribute("userChannel", findedUser);
+        model.addAttribute("type", type);
+
+        if ("subscriptions".equals(type)){
+            model.addAttribute("users", findedUser.getSubscriptions());
+        }
+        else {
+            model.addAttribute("users", findedUser.getSubscribers());
+        }
+
+        return "subscriptions";
+    }
+
 }

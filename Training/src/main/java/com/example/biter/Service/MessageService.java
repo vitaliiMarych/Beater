@@ -5,6 +5,8 @@ import com.example.biter.Domain.User;
 import com.example.biter.Repos.MessageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,8 +52,8 @@ public class MessageService {
         return messageRepo.findAll();
     }
 
-    public Iterable<Message> findByTagLike(String tag) {
-        return messageRepo.findByTagLike(tag);
+    public Page<Message> findByTagLike(String tag, Pageable pageable) {
+        return messageRepo.findByTagLike(tag, pageable);
     }
 
     public Message findById(Long id){

@@ -1,10 +1,12 @@
 <#include "security.ftlh">
+<#import "pager.ftlh" as p>
 
+<div class="mt-3">List of messages</div>
 
-<div class="mt-3">List of messages:</div>
+<@p.pager url page></@p.pager>
 
 <div class="">
-    <#list messages as message>
+    <#list page.content as message>
         <div class="col">
         <div class="card mt-2 border-primary">
             <#if message.filename??>
@@ -33,4 +35,3 @@
     </#list>
 
 </div>
-
