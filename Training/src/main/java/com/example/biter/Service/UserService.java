@@ -98,6 +98,7 @@ public class UserService implements UserDetailsService {
         for (String role : form.keySet()){
             if (roles.contains(role) && !role.equals(Role.USER.name()))
                 newRoles.add(role);
+
         }
 
         findedUser.getRoles().clear();
@@ -112,8 +113,7 @@ public class UserService implements UserDetailsService {
     public void saveProfile(User user, String password, String email) {
         String userEmail = user.getEmail();
 
-        boolean isEmailChanged = (email != null && !email.equals(userEmail)) ||
-                (userEmail != null && userEmail.equals(email));
+        boolean isEmailChanged = !userEmail.equals(email);
 
         if (isEmailChanged){
             user.setEmail(email);

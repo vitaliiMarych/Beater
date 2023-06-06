@@ -3,21 +3,24 @@
 <@c.page>
     <h2>Edit user ${user.username}</h2>
 
-    <form method="post" action="saveUser">
-        <input type="text" name = "username" value="${user.username}">
+    <form method="post" action="saveUser" class="">
 
-        <#list roles as role>
-            <label>
-                <input type="checkbox" name="${role}" ${user.roles ? seq_contains(role)?string("checked", "")}>
-                ${role}
-            </label>
-        </#list>
+        <div class="row g-2">
+        <input class="form-control col-lg-4" type="text" name = "username" value="${user.username}">
+
+        <div class="btn-group" role="group">
+            <#list roles as role>
+                <input type="checkbox" name="${role}" class="btn-check" id="${role}" autocomplete="off" ${user.roles ? seq_contains(role)?string("checked", "")}>
+                <label class="btn btn-outline-success" for="${role}">${role}</label>
+            </#list>
+        </div>
+        </div>
 
         <input type="hidden" value="${user.id}" name="userId">
         <input type = "hidden" name = "_csrf" value="${_csrf.token}">
-        <button type="submit">Save</button>
+        <div class="row">
+            <button class="btn btn-success mt-2 ms-2" type="submit">Save</button>
+        </div>
     </form>
-
-    <a style = "color:red">${message?if_exists}</a>
 
 </@c.page>

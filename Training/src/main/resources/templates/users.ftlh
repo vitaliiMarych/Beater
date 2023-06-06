@@ -1,9 +1,10 @@
 <#import "parts/common.ftlh" as c>
+<#include "parts/security.ftlh">
 
 <@c.page>
     <h2><b>List of users:</b></h2>
 
-    <table>
+    <table class="table">
         <thead>
         <tr>
             <th>User</th>
@@ -11,11 +12,11 @@
             <th></th>
         </tr>
         </thead>
-        <#list users as user>
+        <#list users as userInList>
             <tr>
-                <td>${user.username}</td>
-                <td> <#list user.roles as role> ${role}<#sep> ,</#list></td>
-                <td> <a href = "/user/${user.id}">edit</a></td>
+                <td>${userInList.username}</td>
+                <td> <#list userInList.roles as role> ${role}<#sep> ,</#list></td>
+                <td> <a href = "/user/${userInList.id}">edit</a></td>
             </tr>
         </#list>
         <tbody>

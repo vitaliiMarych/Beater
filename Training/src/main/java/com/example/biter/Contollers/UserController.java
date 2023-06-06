@@ -33,8 +33,6 @@ public class UserController {
             @PathVariable Long user,
             Model model
     ) {
-
-
         User findedUser = userService.findById(user);
 
         if (!Objects.equals(mainUser.getId(), findedUser.getId()))
@@ -58,7 +56,6 @@ public class UserController {
             @RequestParam Long userId
     ){
         userService.saveUser(userId, username, form);
-
 
         return "redirect:/user";
     }

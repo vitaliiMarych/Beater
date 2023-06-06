@@ -56,20 +56,20 @@
 
         <input type = "hidden" name = "_csrf" value="${_csrf.token}">
 
-        <div class="row col-lg-6">
-            <input type="submit" class="btn btn-primary" value="
-            <#if isRegisterForm>
-                Create
-            <#else>
-                Sign in
-            </#if>"/>
-
-            <#if !isRegisterForm>
-                <div class="ml-4 mt-2">
-                    <a href="/registration">Add new user</a>
-                </div>
-            </#if>
+        <div class="row mt-3">
+            <div class="col-lg-6">
+                <input type="submit" class="btn btn-primary" style="width: 150px" value="<#if isRegisterForm> Create<#else> Sign in</#if>"/>
+                <#if !isRegisterForm>
+                    <a href="/registration" class="ms-4">Add new user</a>
+                </#if>
+            </div>
         </div>
+
+        <div>
+
+        </div>
+
+
     </form>
 </#macro>
 

@@ -1,7 +1,7 @@
 <#import "parts/common.ftlh" as c>
 
 <@c.page>
-    <h4>${username}</h4>
+    <h4>Username: ${username}</h4>
 
     <form method="post">
 
@@ -21,8 +21,8 @@
 
         <input type = "hidden" name = "_csrf" value="${_csrf.token}">
 
-        <div class="row col-lg-6">
-            <input type="submit" class="btn btn-primary" value="Зберегти"/>
+        <div class="row col-lg-1 mt-3 ms-1">
+            <input type="submit" class="btn btn-primary" value="Зберегти" style="height: 40px"/>
         </div>
     </form>
 </@c.page>
