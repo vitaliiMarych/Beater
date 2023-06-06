@@ -40,6 +40,7 @@
         <ul class="pagination">
             <li class="page-item disabled">
                 <a class="page-link" href="#" tabindex="-1">Elements on page</a>
+
             </li>
             <#list [5, 10, 25, 50] as c>
                 <#if c == page.getSize()>
